@@ -259,7 +259,6 @@ static void handle_client(int client_fd) {
     }
 
     // not in cache so connect to origin server
-
     int server_fd = socket(AF_INET, SOCK_STREAM, 0);
     if (server_fd < 0){
         send_error(client_fd, 500, "Internal Server Error");
@@ -315,17 +314,7 @@ static void handle_client(int client_fd) {
     if (response && resp_len > 0 ) {
         cache_write(url, response, resp_len); 
     }
-
-    // // uses child process to pre-fetch links
-    // if (response && resp_len > 0) {
-    //     pid_t pid = fork();
-    //     if (pid == 0) {
-    //         prefetch_links(response, resp_len, url);
-    //         free(response);
-    //         exit(0);
-    //     }
-    // }
-
+    
     if (response) free(response);
 }
 
@@ -403,7 +392,7 @@ int main(int argc, char *argv[]) {
             close(client_fd);
             exit(0);
         }
-        // Parent process, close client socket and loop */
+        // Parent process, close client socket and loop
         close(client_fd);
     }
 
